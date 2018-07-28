@@ -102,6 +102,10 @@ export const Watch = {
 			logLevel: 'silent',
 			host: '127.0.0.1',
 			port: 8080,
+			open: false,
+			notify: false,
+			xhtml: true,
+			pedantic: true,
 		});
 
 	},
