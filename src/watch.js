@@ -105,7 +105,7 @@ export const Watch = {
 			open: false,
 			notify: false,
 			xhtml: true,
-			pedantic: true,
+			// pedantic: true,
 		});
 
 	},

@@ -15,7 +15,15 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Dependencies
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-import Marked from 'marked';
+// import Marked from 'marked';
+import Markdown from 'markdown-it';
+import abbr from 'markdown-it-abbr';
+import checkbox from 'markdown-it-checkbox';
+import emoji from 'markdown-it-emoji';
+import footnote from 'markdown-it-footnote';
+import highlight from 'markdown-it-highlightjs';
+import sub from 'markdown-it-sub';
+import sup from 'markdown-it-sup';
 import React from 'react';
 import YAML from 'js-yaml';
 import Path from 'upath';
@@ -81,7 +89,22 @@ export const ParseContent = ( content, file = 'partial.md', props = {} ) => {
 export const ParseMD = ( markdown, file, props ) => {
 	if( typeof markdown === 'string' ) {
 
-		let renderer = new Marked.Renderer();
+		// let renderer = new Marked.Renderer();
+		let renderer = new Markdown({
+			html: true,
+			xhtmlOut: true,
+
+			linkify: true,
+
+			typographer: true,
+		})
+		.use(abbr)
+		.use(checkbox)
+		.use(emoji)
+		.use(footnote)
+		.use(highlight)
+		.use(sub)
+		.use(sup);
 
 		if( SETTINGS.get().site.markdownRenderer ) {
 			const filePath = Path.normalize(`${ process.cwd() }/${ SETTINGS.get().site.markdownRenderer }`);
@@ -105,11 +128,13 @@ export const ParseMD = ( markdown, file, props ) => {
 				markdown = renderer.preparse( markdown );
 			}
 
-			return Marked( markdown, {
-				renderer: renderer,
-				breaks: true,
-				headerIds: false,
-			} );
+			return renderer.render(markdown);
+
+			// return Marked( markdown, {
+			// 	renderer: renderer,
+			// 	// breaks: true,
+			// 	headerIds: false,
+			// } );
 		}
 		catch( error ) {
 			Log.error(`Rendering markdown caused an error in ${ Style.yellow( file ) }`);
